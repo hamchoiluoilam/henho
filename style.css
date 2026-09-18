@@ -1,0 +1,754 @@
+:root {
+  --primary-pink: #ff6584;
+  --deep-pink: #e04368;
+  --soft-pink: #ffe5ec;
+  --peach-glow: #ffc2d1;
+  --accent-gold: #e5a93c;
+  --bg-gradient: linear-gradient(135deg, #ffd1dc 0%, #ffeef2 40%, #ffdde1 70%, #ee9ca7 100%);
+  --text-dark: #4a2835;
+  --text-muted: #825b6a;
+  --card-bg: rgba(255, 255, 255, 0.9);
+  --glass-border: rgba(255, 255, 255, 0.7);
+  --shadow-romantic: 0 15px 35px rgba(224, 67, 104, 0.18), 0 5px 15px rgba(0, 0, 0, 0.05);
+  --font-heading: 'Dancing Script', cursive;
+  --font-body: 'Nunito', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-gradient);
+  color: var(--text-dark);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow-x: hidden;
+  position: relative;
+  padding: 20px 15px;
+}
+
+/* Background canvas for floating hearts */
+#heartCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Music player toggle */
+.music-toggle {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  padding: 8px 16px;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  z-index: 100;
+  box-shadow: 0 4px 15px rgba(224, 67, 104, 0.15);
+  border: 1px solid var(--glass-border);
+  transition: all 0.3s ease;
+  user-select: none;
+}
+
+.music-toggle:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 6px 20px rgba(224, 67, 104, 0.25);
+}
+
+.music-disc {
+  font-size: 1.2rem;
+  display: inline-block;
+  transition: transform 0.4s ease;
+}
+
+.music-toggle.playing .music-disc {
+  animation: spin 3s linear infinite;
+}
+
+.music-text {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--deep-pink);
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
+/* Main Container */
+.app-container {
+  width: 100%;
+  max-width: 520px;
+  position: relative;
+  z-index: 10;
+  perspective: 1000px;
+}
+
+/* Common Card Step */
+.card-step {
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: 28px;
+  padding: 35px 28px;
+  box-shadow: var(--shadow-romantic);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.card-step.active {
+  display: flex;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* STEP 1: ENVELOPE DESIGN */
+.envelope-wrapper {
+  margin: 15px 0 25px 0;
+  cursor: pointer;
+  perspective: 600px;
+}
+
+.envelope {
+  position: relative;
+  width: 240px;
+  height: 160px;
+  background: #fdf0f3;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(224, 67, 104, 0.2);
+  border: 2px solid #ffccd5;
+  transition: transform 0.4s ease;
+}
+
+.envelope-wrapper:hover .envelope {
+  transform: translateY(-5px);
+}
+
+.envelope-seal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 54px;
+  height: 54px;
+  background: linear-gradient(135deg, #ff4d6d, #ff758f);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  box-shadow: 0 4px 12px rgba(224, 67, 104, 0.4);
+  z-index: 5;
+  animation: heartPulse 1.8s infinite;
+}
+
+@keyframes heartPulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.12); }
+}
+
+.letter-preview {
+  position: absolute;
+  bottom: 12px;
+  width: 100%;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.step-desc h2 {
+  font-family: var(--font-heading);
+  font-size: 2.3rem;
+  color: var(--deep-pink);
+  margin-bottom: 8px;
+}
+
+.step-desc .subtitle {
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 25px;
+}
+
+/* BUTTONS */
+.btn-primary {
+  background: linear-gradient(135deg, #ff5376, #ff758f);
+  color: white;
+  border: none;
+  padding: 14px 34px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border-radius: 50px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 8px 20px rgba(255, 83, 118, 0.35);
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 26px rgba(255, 83, 118, 0.45);
+}
+
+.pulse-btn {
+  animation: softPulse 2s infinite;
+}
+
+@keyframes softPulse {
+  0%, 100% { box-shadow: 0 8px 20px rgba(255, 83, 118, 0.35); }
+  50% { box-shadow: 0 8px 30px rgba(255, 83, 118, 0.65); transform: scale(1.02); }
+}
+
+/* STEP 2: PROPOSAL & DODGING BUTTON */
+.cute-badge {
+  background: #fff0f3;
+  color: var(--deep-pink);
+  font-size: 0.85rem;
+  font-weight: 800;
+  padding: 6px 18px;
+  border-radius: 20px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  border: 1px solid #ffccd5;
+}
+
+.cute-mascot {
+  width: 140px;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+.mascot-svg {
+  filter: drop-shadow(0 8px 16px rgba(255, 101, 132, 0.25));
+  animation: bearSway 3s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+@keyframes bearSway {
+  0%, 100% { transform: rotate(0deg) translateY(0); }
+  25% { transform: rotate(-3deg) translateY(-2px); }
+  75% { transform: rotate(3deg) translateY(-2px); }
+}
+
+.beating-heart-icon {
+  animation: heartThump 1.2s ease-in-out infinite;
+  transform-origin: 80px 105px;
+}
+
+@keyframes heartThump {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.18); }
+}
+
+.mascot-fallback {
+  font-size: 4rem;
+  display: none;
+}
+
+.proposal-title {
+  font-family: var(--font-heading);
+  font-size: 2.35rem;
+  color: #c9184a;
+  line-height: 1.3;
+  margin-bottom: 12px;
+}
+
+.proposal-subtitle {
+  font-size: 1rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 30px;
+  max-width: 400px;
+}
+
+.answer-buttons-area {
+  position: relative;
+  width: 100%;
+  min-height: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.btn-yes {
+  background: linear-gradient(135deg, #ff477e, #ff70a6);
+  color: white;
+  border: none;
+  padding: 15px 32px;
+  font-size: 1.25rem;
+  font-weight: 800;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(255, 71, 126, 0.4);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  z-index: 10;
+}
+
+.btn-yes:hover {
+  transform: scale(1.08);
+  box-shadow: 0 12px 30px rgba(255, 71, 126, 0.55);
+}
+
+.btn-no {
+  background: #f1f3f5;
+  color: #6c757d;
+  border: 2px solid #dee2e6;
+  padding: 14px 28px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: transform 0.15s ease, left 0.15s ease, top 0.15s ease;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.evade-hint {
+  font-size: 0.95rem;
+  color: var(--deep-pink);
+  font-weight: 700;
+  min-height: 24px;
+  margin-top: 15px;
+  transition: all 0.3s ease;
+}
+
+/* STEP 3: FOOD & DATE PICKER */
+.celebration-badge {
+  background: #e8f5e9;
+  color: #2e7d32;
+  font-size: 0.9rem;
+  font-weight: 800;
+  padding: 6px 18px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+  border: 1px solid #c8e6c9;
+}
+
+.section-title {
+  font-family: var(--font-heading);
+  font-size: 2.2rem;
+  color: var(--deep-pink);
+  margin-bottom: 6px;
+}
+
+.section-sub {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin-bottom: 22px;
+}
+
+.food-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 25px;
+}
+
+.food-card {
+  position: relative;
+  display: block;
+  cursor: pointer;
+  text-align: left;
+}
+
+.food-card input[type="radio"] {
+  display: none;
+}
+
+.card-inner {
+  background: rgba(255, 255, 255, 0.7);
+  border: 2px solid #ffd6de;
+  border-radius: 18px;
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  transition: all 0.25s ease;
+}
+
+.food-card:hover .card-inner {
+  background: #fff;
+  border-color: #ff758f;
+  transform: translateX(4px);
+}
+
+.food-card input[type="radio"]:checked + .card-inner {
+  background: #fff0f3;
+  border-color: var(--primary-pink);
+  box-shadow: 0 4px 14px rgba(255, 101, 132, 0.25);
+  transform: scale(1.02);
+}
+
+.food-icon {
+  font-size: 2.2rem;
+}
+
+.food-info h3 {
+  font-size: 1.05rem;
+  color: var(--text-dark);
+  margin-bottom: 3px;
+  font-weight: 800;
+}
+
+.food-info p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+
+.date-details {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 25px;
+  text-align: left;
+}
+
+.input-group label {
+  display: block;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--text-dark);
+  margin-bottom: 6px;
+}
+
+.custom-select, .input-group input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 2px solid #ffccd5;
+  background: white;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--text-dark);
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.custom-select:focus, .input-group input:focus {
+  border-color: var(--primary-pink);
+}
+
+/* STEP 4: DATE TICKET (BOARDING PASS) */
+.ticket-container {
+  width: 100%;
+  background: #ffffff;
+  border-radius: 24px;
+  box-shadow: 0 15px 35px rgba(224, 67, 104, 0.25);
+  position: relative;
+  overflow: hidden;
+  border: 2px solid #ffccd5;
+  margin-bottom: 24px;
+}
+
+.ticket-header {
+  background: linear-gradient(135deg, #ff477e, #ff758f);
+  color: white;
+  padding: 22px 20px 18px;
+  text-align: center;
+}
+
+.ticket-badge {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  background: rgba(0, 0, 0, 0.15);
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-bottom: 6px;
+}
+
+.ticket-main-title {
+  font-family: var(--font-heading);
+  font-size: 2.1rem;
+  margin-bottom: 2px;
+}
+
+.ticket-subtitle {
+  font-size: 0.85rem;
+  opacity: 0.92;
+}
+
+.ticket-body {
+  padding: 20px 24px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ticket-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.t-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.t-value {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-dark);
+}
+
+.editable-field {
+  display: inline-block;
+  border-bottom: 1.5px dashed #ff8fa3;
+  padding: 1px 4px;
+  border-radius: 4px;
+  cursor: text;
+  transition: all 0.2s ease;
+}
+
+.editable-field:hover {
+  background: #fff0f3;
+  border-bottom-color: var(--deep-pink);
+}
+
+.editable-field:focus {
+  outline: none;
+  background: #fff0f3;
+  border-bottom: 2px solid var(--deep-pink);
+  box-shadow: 0 0 8px rgba(255, 71, 126, 0.2);
+}
+
+.t-value.highlight {
+  color: var(--deep-pink);
+}
+
+.note-text {
+  font-style: italic;
+  font-weight: 600;
+  color: #7b2cbf;
+}
+
+.ticket-perforation {
+  position: relative;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ticket-perforation .circle {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  background: var(--bg-gradient);
+  border-radius: 50%;
+  top: 0;
+}
+
+.ticket-perforation .circle.left {
+  left: -12px;
+  border-right: 2px solid #ffccd5;
+}
+
+.ticket-perforation .circle.right {
+  right: -12px;
+  border-left: 2px solid #ffccd5;
+}
+
+.dashed-line {
+  width: calc(100% - 36px);
+  height: 2px;
+  border-top: 2px dashed #ffb3c1;
+}
+
+.ticket-footer {
+  padding: 16px 24px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fffbfa;
+}
+
+.barcode {
+  font-family: monospace;
+  font-size: 0.75rem;
+  color: #888;
+  letter-spacing: 1px;
+}
+
+.barcode p {
+  font-size: 0.65rem;
+  letter-spacing: 1.5px;
+  margin-top: 3px;
+  font-weight: 700;
+}
+
+.stamp-verified {
+  border: 2px dashed #ff477e;
+  color: #ff477e;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 900;
+  transform: rotate(-8deg);
+  letter-spacing: 1px;
+  box-shadow: 0 0 10px rgba(255, 71, 126, 0.15);
+}
+
+/* TICKET ACTIONS */
+.ticket-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.btn-action {
+  border: none;
+  padding: 14px 24px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  border-radius: 50px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.25s ease;
+}
+
+.send-btn {
+  background: linear-gradient(135deg, #0088cc, #00b4d8);
+  color: white;
+  box-shadow: 0 6px 18px rgba(0, 180, 216, 0.35);
+}
+
+.send-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0, 180, 216, 0.45);
+}
+
+.copy-btn {
+  background: linear-gradient(135deg, #ff5376, #ff758f);
+  color: white;
+  box-shadow: 0 6px 18px rgba(255, 83, 118, 0.35);
+}
+
+.copy-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(255, 83, 118, 0.45);
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 1px solid #ffccd5;
+  color: var(--text-muted);
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--deep-pink);
+}
+
+/* Toast */
+.toast-message {
+  position: fixed;
+  bottom: 25px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: #333;
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 30px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+  opacity: 0;
+  transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 200;
+  pointer-events: none;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.toast-message.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+.footer-note {
+  margin-top: 25px;
+  font-size: 0.85rem;
+  color: #9d6b7b;
+  font-weight: 600;
+  position: relative;
+  z-index: 10;
+}
+
+/* RESPONSIVE TWEAKS */
+@media (max-width: 480px) {
+  .app-container {
+    max-width: 100%;
+  }
+
+  .card-step {
+    padding: 28px 18px;
+    border-radius: 22px;
+  }
+
+  .proposal-title {
+    font-size: 1.95rem;
+  }
+
+  .answer-buttons-area {
+    min-height: 120px;
+  }
+
+  .ticket-body {
+    padding: 16px 18px;
+  }
+}

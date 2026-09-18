@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Lời Mời Hẹn Hò Đặc Biệt Dành Riêng Cho Em 💌✨</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Canvas hiệu ứng trái tim bay & hạt sáng lấp lánh -->
+  <canvas id="heartCanvas"></canvas>
+
+  <!-- Nút điều khiển nhạc nền -->
+  <div class="music-toggle" id="musicToggle" title="Bật / Tắt nhạc lãng mạn">
+    <div class="music-disc" id="musicDisc">🎵</div>
+    <span class="music-text">Nhạc du dương</span>
+  </div>
+  <audio id="bgAudio" loop preload="auto"></audio>
+
+  <!-- Container chính của ứng dụng -->
+  <main class="app-container">
+
+    <!-- BƯỚC 1: PHONG THƯ TÌNH YÊU -->
+    <section class="card-step active" id="step1">
+      <div class="envelope-wrapper" id="envelopeWrapper">
+        <div class="envelope" id="envelope">
+          <div class="envelope-front"></div>
+          <div class="envelope-back"></div>
+          <div class="envelope-flap"></div>
+          <div class="envelope-seal">💖</div>
+          <div class="letter-preview">
+            <p>Có một lời nhắn bí mật dành cho em...</p>
+          </div>
+        </div>
+      </div>
+      <div class="step-desc">
+        <h2>Gửi Người Thương Của Anh 🌸</h2>
+        <p class="subtitle">Anh có điều này ấp ủ muốn nói với em từ mấy hôm nay rùi...</p>
+        <button class="btn-primary pulse-btn" id="openLetterBtn">
+          <span>Mở thư xem ngay nè</span> 💌
+        </button>
+      </div>
+    </section>
+
+    <!-- BƯỚC 2: CÂU HỎI HẸN HÒ & NÚT NÉ TRÁNH NGHỊCH NGỢM -->
+    <section class="card-step" id="step2">
+      <div class="cute-badge">✨ Date Proposal ✨</div>
+      <div class="cute-mascot">
+        <svg class="mascot-svg" viewBox="0 0 160 160" width="140" height="140">
+          <g class="bear-body">
+            <!-- Ears -->
+            <circle cx="50" cy="45" r="18" fill="#e9a883" stroke="#b06d48" stroke-width="3"/>
+            <circle cx="50" cy="45" r="10" fill="#ffb4a2"/>
+            <circle cx="110" cy="45" r="18" fill="#e9a883" stroke="#b06d48" stroke-width="3"/>
+            <circle cx="110" cy="45" r="10" fill="#ffb4a2"/>
+            <!-- Head -->
+            <ellipse cx="80" cy="80" rx="46" ry="42" fill="#e9a883" stroke="#b06d48" stroke-width="3"/>
+            <!-- Eyes -->
+            <circle cx="65" cy="74" r="5" fill="#3d1e11"/>
+            <circle cx="67" cy="72" r="1.8" fill="#ffffff"/>
+            <circle cx="95" cy="74" r="5" fill="#3d1e11"/>
+            <circle cx="97" cy="72" r="1.8" fill="#ffffff"/>
+            <!-- Snout -->
+            <ellipse cx="80" cy="86" rx="14" ry="10" fill="#fff1e6"/>
+            <path d="M76 83 C78 86, 82 86, 84 83" stroke="#3d1e11" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <circle cx="80" cy="82" r="3.2" fill="#3d1e11"/>
+            <!-- Blushing Cheeks -->
+            <circle cx="56" cy="85" r="8" fill="#ff8fa3" opacity="0.6"/>
+            <circle cx="104" cy="85" r="8" fill="#ff8fa3" opacity="0.6"/>
+            <!-- Heart in paws -->
+            <path class="beating-heart-icon" d="M80 128 C80 128, 56 112, 56 94 C56 82, 70 78, 80 90 C90 78, 104 82, 104 94 C104 112, 80 128, 80 128 Z" fill="#ff4d6d"/>
+            <!-- Paws -->
+            <ellipse cx="64" cy="106" rx="8" ry="7" fill="#e9a883" stroke="#b06d48" stroke-width="2"/>
+            <ellipse cx="96" cy="106" rx="8" ry="7" fill="#e9a883" stroke="#b06d48" stroke-width="2"/>
+          </g>
+        </svg>
+      </div>
+      <h1 class="proposal-title">
+        Tối nay em có muốn đi ăn cùng anh không? 💕
+      </h1>
+      <p class="proposal-subtitle">
+        Anh bao hết từ A đến Z, em chỉ việc chuẩn bị một tâm hồn thật xinh đẹp thui!
+      </p>
+
+      <div class="answer-buttons-area" id="buttonsArea">
+        <button class="btn-yes" id="yesBtn">
+          <span>Dạ đi chớ! 🥰</span>
+        </button>
+        <button class="btn-no" id="noBtn">
+          <span>Hong thèm 😝</span>
+        </button>
+      </div>
+      <p class="evade-hint" id="evadeHint"></p>
+    </section>
+
+    <!-- BƯỚC 3: CHỌN MÓN ĂN & THỜI GIAN -->
+    <section class="card-step" id="step3">
+      <div class="celebration-badge">🎉 Yeahhh! Em đã đồng ý rùi nha! 🎉</div>
+      <h2 class="section-title">Hôm nay công chúa muốn ăn gì nè? 🍽️</h2>
+      <p class="section-sub">Tích chọn món em đang thèm nhất nhé:</p>
+
+      <div class="food-grid">
+        <label class="food-card active">
+          <input type="radio" name="foodChoice" value="Lẩu nướng xì xèo ấm áp" checked>
+          <div class="card-inner">
+            <span class="food-icon">🍲</span>
+            <div class="food-info">
+              <h3>Lẩu Nướng Xì Xèo</h3>
+              <p>Thịt bò ngập tràn, nước lẩu ngọt thanh ấm bụng</p>
+            </div>
+          </div>
+        </label>
+
+        <label class="food-card">
+          <input type="radio" name="foodChoice" value="Steak & Rượu vang nến thơm">
+          <div class="card-inner">
+            <span class="food-icon">🥩</span>
+            <div class="food-info">
+              <h3>Steak & Nến Thơm</h3>
+              <p>Bò bít tết hảo hạng, không gian lãng mạn du dương</p>
+            </div>
+          </div>
+        </label>
+
+        <label class="food-card">
+          <input type="radio" name="foodChoice" value="Đồ Nhật & Sushi tươi mát">
+          <div class="card-inner">
+            <span class="food-icon">🍣</span>
+            <div class="food-info">
+              <h3>Sushi & Ẩm Thực Nhật</h3>
+              <p>Cá hồi béo ngậy, thanh tao và tươi ngon ngây ngất</p>
+            </div>
+          </div>
+        </label>
+
+        <label class="food-card">
+          <input type="radio" name="foodChoice" value="Trà sữa & Ăn vặt đường phố">
+          <div class="card-inner">
+            <span class="food-icon">🧋</span>
+            <div class="food-info">
+              <h3>Phố Ăn Vặt & Trà Sữa</h3>
+              <p>Gió mát đường phố, trà sữa full topping và la cà</p>
+            </div>
+          </div>
+        </label>
+
+        <label class="food-card">
+          <input type="radio" name="foodChoice" value="Tất cả mọi món tuỳ ý em">
+          <div class="card-inner">
+            <span class="food-icon">✨</span>
+            <div class="food-info">
+              <h3>Tuỳ Ý Em Hết</h3>
+              <p>Chỉ cần đi cùng em thì ăn gì anh cũng thấy ngon</p>
+            </div>
+          </div>
+        </label>
+      </div>
+
+      <!-- Chọn thời gian & Lời nhắn -->
+      <div class="date-details">
+        <div class="input-group">
+          <label for="dateTimeInput">⏰ Giờ anh qua đón em:</label>
+          <select id="dateTimeInput" class="custom-select">
+            <option value="19:00 Tối nay">19:00 Tối nay (Đúng giờ tan tầm)</option>
+            <option value="19:30 Tối nay">19:30 Tối nay (Thong thả lên đồ)</option>
+            <option value="Cuối tuần này (Thứ 7 / CN)">Cuối tuần này (Thứ 7 / CN rảnh rang)</option>
+            <option value="Bất cứ lúc nào em rảnh">Bất cứ lúc nào em rảnh (Gọi là anh phi tới liền!)</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label for="sweetNote">💬 Lời nhắn thêm cho anh (nếu có):</label>
+          <input type="text" id="sweetNote" placeholder="Ví dụ: Nhớ mua cho em 1 cốc trà sữa ít ngọt nha..." maxlength="100">
+        </div>
+      </div>
+
+      <button class="btn-primary" id="confirmChoicesBtn">
+        <span>Xem Tấm Vé Hẹn Hò Của Chúng Mình</span> 🎫✨
+      </button>
+    </section>
+
+    <!-- BƯỚC 4: TẤM VÉ HẸN HÒ (DATE TICKET) & XÁC NHẬN -->
+    <section class="card-step" id="step4">
+      <div class="ticket-container" id="dateTicket">
+        <div class="ticket-header">
+          <div class="ticket-badge">VIP DATE TICKET • EXCLUSIVE</div>
+          <h2 class="ticket-main-title">VÉ HẸN HÒ ĐẶC BIỆT ❤️</h2>
+          <p class="ticket-subtitle">Có giá trị sử dụng trọn đời bên anh</p>
+        </div>
+
+        <div class="ticket-body">
+          <div class="ticket-row">
+            <span class="t-label">Người được mời (Bấm để đổi tên): ✏️</span>
+            <span class="t-value highlight editable-field" id="receiverName" contenteditable="true" title="Chạm hoặc bấm vào để đổi tên/biệt danh">Bé Yêu Xinh Đẹp Nhất Quả Đất 👑</span>
+          </div>
+          <div class="ticket-row">
+            <span class="t-label">Người đưa đón & bao trọn: ✏️</span>
+            <span class="t-value editable-field" id="senderName" contenteditable="true" title="Chạm hoặc bấm vào để đổi tên">Anh người yêu chu đáo 🚗💐</span>
+          </div>
+          <div class="ticket-row">
+            <span class="t-label">Thực đơn hôm nay:</span>
+            <span class="t-value highlight" id="summaryFood">Lẩu nướng xì xèo</span>
+          </div>
+          <div class="ticket-row">
+            <span class="t-label">Thời gian đón:</span>
+            <span class="t-value" id="summaryTime">19:00 Tối nay</span>
+          </div>
+          <div class="ticket-row" id="noteRow" style="display: none;">
+            <span class="t-label">Lời dặn dò:</span>
+            <span class="t-value note-text" id="summaryNote"></span>
+          </div>
+          <div class="ticket-row">
+            <span class="t-label">Dress code:</span>
+            <span class="t-value">Thật xinh đẹp và thoải mái (vì em mặc gì cũng đẹp) ✨</span>
+          </div>
+        </div>
+
+        <div class="ticket-perforation">
+          <div class="circle left"></div>
+          <div class="dashed-line"></div>
+          <div class="circle right"></div>
+        </div>
+
+        <div class="ticket-footer">
+          <div class="barcode">
+            <span>||| | | |||| | ||| |||| | | ||| | |||| | |</span>
+            <p>CODE: FOREVER-LOVE-WITH-YOU</p>
+          </div>
+          <div class="stamp-verified">APPROVED ✔️</div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="ticket-actions">
+        <button class="btn-action send-btn" id="sendZaloBtn">
+          <span>Gửi kết quả cho anh qua Zalo</span> 💬
+        </button>
+        <button class="btn-action copy-btn" id="copyMsgBtn">
+          <span>Sao chép lời nhắn ngọt ngào</span> 📋
+        </button>
+        <button class="btn-secondary" id="restartBtn">
+          <span>Chọn lại từ đầu</span> 🔄
+        </button>
+      </div>
+      <div class="toast-message" id="toastMessage">Đã sao chép vào bộ nhớ tạm! Gửi cho anh ngay nhé 💕</div>
+    </section>
+
+  </main>
+
+  <footer class="footer-note">
+    Made with all my heart for you ❤️
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
