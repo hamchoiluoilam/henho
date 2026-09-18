@@ -1,6 +1,8 @@
-// ==========================================
-// WEBSITE RỦ NGƯỜI YÊU ĐI ĂN LÃNG MẠN 💌✨
-// ==========================================
+// ==============================================================================
+// CẤU HÌNH SỐ ĐIỆN THOẠI ZALO CỦA BẠN:
+// 👉 Đã cập nhật số điện thoại Zalo của bạn:
+const MY_ZALO_PHONE = "0915852023"; 
+// ==============================================================================
 
 document.addEventListener('DOMContentLoaded', () => {
   // DOM Elements
@@ -420,15 +422,22 @@ document.addEventListener('DOMContentLoaded', () => {
   // Gửi qua Zalo
   sendZaloBtn.addEventListener('click', () => {
     const text = generateConfirmationMessage();
-    // Copy trước để tiện dán
+    // Copy trước vào clipboard để người yêu chỉ việc bấm Dán
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(text);
+    } else {
+      fallbackCopy(text);
     }
-    showToast('Đang mở Zalo... Hãy dán tin nhắn vào khung chat nhé! 💌');
+
+    // Kiểm tra đã điền số điện thoại hay chưa
+    const hasPhone = MY_ZALO_PHONE && MY_ZALO_PHONE !== "09xxxxxxxx" && MY_ZALO_PHONE.length >= 9;
+    const zaloUrl = hasPhone ? `https://zalo.me/${MY_ZALO_PHONE}` : 'https://chat.zalo.me/';
+
+    showToast('Đã copy lời nhắn! Đang mở Zalo của anh, em bấm Dán (Paste) nha 💕');
+    
     setTimeout(() => {
-      // Mở Zalo web hoặc app
-      window.open('https://chat.zalo.me/', '_blank');
-    }, 800);
+      window.open(zaloUrl, '_blank');
+    }, 700);
   });
 
   // Chọn lại từ đầu
